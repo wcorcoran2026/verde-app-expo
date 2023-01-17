@@ -1,76 +1,50 @@
-import React, { Component, useCallback, useEffect } from "react";
+import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useUser } from "@hooks/useUser";
+import { useAuthentication } from "@hooks/useAuthentication";
 import { Button } from "react-native-elements";
 import { getAuth, signOut } from "firebase/auth";
-import PostComponent from "@components/PostComponent";
-import { Post, RouterProps } from "src/types";
-import { usePost } from "@utils/hooks/usePost";
-import { RefreshControl, ScrollView } from "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import Post from "@components/Post";
+import { RouterProps } from "src/types";
 
 export default function HomeScreen({ navigation }: RouterProps) {
-	const { authUser } = useUser();
+	const { user } = useAuthentication();
 	const auth = getAuth();
-	const { getAllPosts } = usePost();
 
-	const [posts, setPosts] = React.useState<Post[]>([]);
-
-	const fetchAllPosts = async () => {
-		const allPosts = await getAllPosts();
-		setPosts(allPosts);
-	};
-
-	useEffect(() => {
-		fetchAllPosts();
-	}, []);
-
-	const [refreshing, setRefreshing] = React.useState(false);
-
-	const onRefresh = useCallback(async () => {
-		await fetchAllPosts();
-		setRefreshing(false);
-	}, []);
 	return (
-		<ScrollView
-			refreshControl={
-				<RefreshControl
-					refreshing={refreshing}
-					onRefresh={onRefresh}
-				></RefreshControl>
-			}
-		>
-			<View style={styles.container}>
-				<Text>Welcome {authUser?.displayName}!</Text>
+		<View style={styles.container}>
+			<Text>Welcome {user?.email}!</Text>
 
-				<Button
-					title="Sign Out"
-					style={styles.button}
-					onPress={() => signOut(auth)}
-				/>
+			<Button
+				title="Sign Out"
+				style={styles.button}
+				onPress={() => signOut(auth)}
+			/>
 
-				<Button
-					title="Camera"
-					style={styles.button}
-					onPress={() => navigation.navigate("Camera")}
-				/>
+			<Button
+				title="Camera"
+				style={styles.button}
+				onPress={() => navigation.navigate("Camera")}
+			/>
 
-				<Button
-					title="Challenges"
-					style={styles.button}
-					onPress={() => navigation.navigate("Challenges")}
-				/>
+			<Button
+				title="Challenges"
+				style={styles.button}
+				onPress={() => navigation.navigate("Challenges")}
+			/>
 
-				<Button
-					title="Profile"
-					style={styles.button}
-					onPress={() => navigation.navigate("Profile")}
-				/>
+			<Button
+				title="Profile"
+				style={styles.button}
+				onPress={() => navigation.navigate("Profile")}
+			/>
 
-				{posts.map((post: Post) => {
-					return <PostComponent key={post.uid} post={post} />;
-				})}
-			</View>
-		</ScrollView>
+			<Post
+				image="https://www.thisiscolossal.com/wp-content/uploads/2019/02/moon_crop.jpg"
+				uid=""
+				caption="i took a picture of the moon"
+			/>
+		</View>
 	);
 }
 
