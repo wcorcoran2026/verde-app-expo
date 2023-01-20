@@ -10,7 +10,9 @@
 			"@navigation/*": ["src/navigation/*"],
 			"@screens/*": ["src/screens/*"],
 			"@utils/*": ["src/utils/*"],
-			"@hooks/*": ["src/utils/hooks/*"],
+			"@hooks/*": ["src/utils/hooks/*"]
 		},
+      "jsx": "react",
+		"allowSyntheticDefaultImports": true
 	}
 }
